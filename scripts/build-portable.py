@@ -16,6 +16,7 @@ html=(root/'index.html').read_text().replace('<link rel="stylesheet" href="./sty
 html=html.replace('<script type="module" src="./app.js"></script>','<script>\n'+code+'\n</script>')
 html=html.replace('<title>Resonance Studio · 共振视觉工作台</title>','<title>Resonance Studio · 本地直接打开版</title>').replace('href="./" aria-label="Resonance Studio 首页"','href="#" aria-label="Resonance Studio 首页"')
 out.write_text(html)
+(project/'index.html').write_text(html.replace('<title>Resonance Studio · 本地直接打开版</title>','<title>Resonance Studio · 共振视觉工作台</title>'))
 print('Portable HTML:',out,'bytes:',out.stat().st_size)
 assert 'src="./app.js"' not in html and 'href="./styles.css"' not in html
 assert 'new Worker(analysisWorkerUrl)' in html

@@ -1,10 +1,14 @@
 # Resonance Studio · 共振视觉工作台
 
+**[▶ 在线体验音乐视觉工作台](https://mecony.github.io/resonance-studio/)**
+
+无需下载，在浏览器中选择示例音乐或导入自己的音频即可体验。
+
 把音乐变成可编辑、可导出的动态视觉作品。一个完全在浏览器内处理音频的音乐视觉工作台，包含原创合成示例、三种视觉主题、音频特征分析和创作方案保存。
 
 **版本：v0.1.0 · 可运行的第一版**
 
-[![Tests](https://github.com/Mecony/resonance-music-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/Mecony/resonance-music-studio/actions/workflows/ci.yml)
+[![Tests](https://github.com/Mecony/resonance-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/Mecony/resonance-studio/actions/workflows/ci.yml)
 
 ![工作台界面](docs/preview.png)
 
@@ -83,6 +87,10 @@ docs/                 算法、验证与使用边界
 采用原生 JavaScript ES Modules、Canvas 2D、Web Audio API、Web Worker 和 Node 内置测试。第一版使用无构建部署，便于阅读、离线运行和托管到 GitHub Pages；未使用 React，也未训练机器学习模型。
 
 ## 部署到 GitHub Pages
+
+当前公开入口：[https://mecony.github.io/resonance-studio/](https://mecony.github.io/resonance-studio/)。
+
+根目录 `index.html` 由同一份源码生成，`main` / `/(root)` 可作为 Pages 发布源。
 
 这是纯静态项目。可以将 `dist/` 的内容放到 Pages 发布目录，也可以通过自己的 Pages 构建工作流发布 `dist/`。启用 GitHub Pages 由仓库管理员在仓库设置中完成；本项目没有自动修改仓库发布设置。
 
