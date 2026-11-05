@@ -1,0 +1,12 @@
+{
+  "name": "resonance-studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local-first music-reactive visual studio with deterministic rendering and offline audio analysis",
+  "scripts": {
+    "start": "python3 -m http.server 3000 --directory dist",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check dist/app.js && node --check dist/dsp.js && node --check dist/visuals.js && node --check dist/audio-worker.js"
+  }
+}

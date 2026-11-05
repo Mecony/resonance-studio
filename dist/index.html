@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f3ed">
+  <meta name="description" content="共振视觉工作台：导入音乐，用真实音频特征驱动花瓣、星环与几何动画，在浏览器内制作动态视觉作品。">
+  <title>Resonance Studio · 共振视觉工作台</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23141a1b'/%3E%3Cg fill='none' stroke='%23f5cf91' stroke-width='2'%3E%3Cellipse cx='32' cy='32' rx='10' ry='22'/%3E%3Cellipse cx='32' cy='32' rx='10' ry='22' transform='rotate(60 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='10' ry='22' transform='rotate(120 32 32)'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 10v4m4-8v12m5-16v20m5-16v12m4-8v4"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h12l4 4v14H3V3h2Zm2 0v7h10V3M7 21v-7h10v7"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m3 17 6-6 4 4 3-3 5 5"/><circle cx="15.5" cy="7.5" r="1"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M4 10V7h15l-3-3m4 10v3H5l3 3"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 1 8M4 4v6h6"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="m11 4-6 5H2v6h3l6 5Zm4 4a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v7m0-11v1"/></symbol>
+    <symbol id="i-flower" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="4" ry="10"/><ellipse cx="12" cy="12" rx="4" ry="10" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="4" ry="10" transform="rotate(120 12 12)"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M5 5v14m14-14L8 12l11 7Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16m10-16v16M3 9h4m-4 6h4M17 9h4m-4 6h4"/></symbol>
+  </defs></svg>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Resonance Studio 首页"><span class="brand-icon"><svg><use href="#i-flower"/></svg></span><span>resonance<span class="brand-studio">studio</span><small>共振视觉工作台</small></span></a>
+    <div class="workspace-label">声音与视觉的创作空间 <span>/</span> <b>新建作品</b></div>
+    <div class="header-actions"><span class="local-badge"><span></span> 音频在本机处理</span><button id="help-button" class="icon-button" aria-label="使用说明"><svg><use href="#i-info"/></svg></button><button id="save-project" class="button secondary"><svg><use href="#i-save"/></svg>保存方案</button></div>
+  </header>
+  <div class="workspace">
+    <aside class="library-panel">
+      <div class="panel-kicker">YOUR MATERIAL</div><h2>声音素材</h2>
+      <button class="upload-area" id="upload-button"><span class="upload-symbol"><svg><use href="#i-upload"/></svg></span><b>导入你的音乐</b><span>点击选择，或拖入音频文件</span><small>WAV / MP3 · 最长 3 分钟 · 32 MB</small></button>
+      <input type="file" id="audio-file" accept="audio/*,.wav,.mp3,.m4a,.ogg,.flac" hidden>
+      <div class="source-separator"><span>也可以从这里开始</span></div>
+      <button id="demo-button" class="demo-track active"><span class="album-art"><svg><use href="#i-wave"/></svg></span><span class="track-copy"><b>Amber & Air</b><small>原创合成示例 · 00:38</small></span><span class="track-check"><svg><use href="#i-check"/></svg></span></button>
+      <div class="section-divider"></div><div class="section-title"><div><div class="panel-kicker">VISUAL COLLECTION</div><h2>选择视觉</h2></div><span class="count-chip">03</span></div>
+      <div class="theme-list" role="group" aria-label="视觉主题">
+        <button class="theme-card selected" data-theme="bloom" aria-pressed="true"><canvas width="384" height="160" aria-hidden="true"></canvas><span class="theme-card-footer"><span><b>花瓣粒子</b><small>SONIC BLOOM</small></span><span class="theme-selected">↗</span></span></button>
+        <button class="theme-card" data-theme="orbit" aria-pressed="false"><canvas width="384" height="160" aria-hidden="true"></canvas><span class="theme-card-footer"><span><b>星环频谱</b><small>ORBITAL ECHO</small></span><span class="theme-selected">↗</span></span></button>
+        <button class="theme-card" data-theme="geometry" aria-pressed="false"><canvas width="384" height="160" aria-hidden="true"></canvas><span class="theme-card-footer"><span><b>几何律动</b><small>FORM & FREQUENCY</small></span><span class="theme-selected">↗</span></span></button>
+      </div>
+      <button id="import-project" class="text-button import-button"><svg><use href="#i-upload"/></svg>打开已保存的方案</button><input type="file" id="project-file" accept=".json,application/json" hidden>
+    </aside>
+    <main class="creation-panel">
+      <div class="creation-heading"><div><div class="panel-kicker">SOUND INTO SOMETHING BEAUTIFUL</div><h1>把声音，变成可见的诗<span>。</span></h1></div><span class="edition">VOL. 01<br><b>THE SOUND SERIES</b></span></div>
+      <div class="canvas-toolbar"><div class="preview-label"><span class="live-dot"></span><b>创作预览</b><span id="theme-name">花瓣粒子</span></div><div class="canvas-tools"><div class="ratio-switch" role="group" aria-label="画布比例"><button data-ratio="16:9" class="active" aria-pressed="true">16:9</button><button data-ratio="1:1" aria-pressed="false">1:1</button><button data-ratio="9:16" aria-pressed="false">9:16</button></div><button id="fullscreen-button" class="icon-button" aria-label="全屏预览"><svg><use href="#i-expand"/></svg></button></div></div>
+      <div class="stage" id="stage"><canvas id="visual-canvas" width="1280" height="720" aria-label="音乐驱动的动态视觉预览"></canvas><div class="loading" id="loading"><span class="spinner"></span><b id="loading-title">正在准备声音与画面</b><span id="loading-detail">生成原创示例音乐…</span></div><button id="stage-play" class="stage-play" aria-label="播放音乐并开始预览"><svg><use href="#i-play"/></svg><span>听见它，也看见它</span></button><div class="recording-badge" id="recording-badge" hidden>● 正在录制</div></div>
+      <div class="stage-caption"><span id="visual-caption">每一次起伏，都有绽放的形状。</span><span>MADE OF SOUND <i>✳</i></span></div>
+      <section class="transport" aria-label="音频播放器"><div class="transport-top"><div class="current-track"><span class="current-art"><svg><use href="#i-wave"/></svg></span><div><b id="track-title">Amber & Air</b><span id="track-meta">原创示例 · 准备中</span></div></div><div class="transport-controls"><button id="restart-button" class="icon-button" aria-label="回到开头"><svg><use href="#i-back"/></svg></button><button id="play-button" class="play-button" aria-label="播放"><svg><use href="#i-play"/></svg></button><button id="loop-button" class="icon-button" aria-label="循环播放" aria-pressed="false"><svg><use href="#i-repeat"/></svg></button></div><div class="volume-control"><svg><use href="#i-volume"/></svg><input id="volume" type="range" min="0" max="1" step=".01" value=".65" aria-label="音量"></div></div><div class="timeline"><span id="current-time">00:00</span><div class="waveform-wrap"><canvas id="waveform" width="1000" height="70" aria-hidden="true"></canvas><input id="seek" type="range" min="0" max="38.4" step=".01" value="0" aria-label="播放进度"></div><span id="total-time">00:38</span></div></section>
+      <div class="analysis-strip"><div class="analysis-heading"><svg><use href="#i-wave"/></svg><span>声音的此刻</span></div><div class="mini-meter"><span>低频</span><i><b id="meter-low"></b></i></div><div class="mini-meter"><span>中频</span><i><b id="meter-mid"></b></i></div><div class="mini-meter"><span>高频</span><i><b id="meter-high"></b></i></div><div class="rms-value" id="rms-value">−∞ dBFS</div></div>
+      <footer class="workspace-footer"><span>一点声音，无限形状。</span><span>RESONANCE STUDIO <b>✳</b> 2026</span></footer>
+    </main>
+    <aside class="inspector-panel"><div class="inspector-heading"><div><div class="panel-kicker">MAKE IT YOURS</div><h2>雕琢画面</h2></div><button id="reset-button" class="icon-button" aria-label="重置视觉参数"><svg><use href="#i-reset"/></svg></button></div>
+      <div class="setting-section"><label class="setting-label">色彩情绪<span id="palette-name">琥珀日落</span></label><div class="palette-options" role="group" aria-label="配色"><button class="palette-option selected" data-palette="amber" aria-label="琥珀日落" aria-pressed="true"><span style="--a:#f5cf91;--b:#de916b;--c:#e6b6ae"></span></button><button class="palette-option" data-palette="sea" aria-label="海盐蓝" aria-pressed="false"><span style="--a:#a2d6d2;--b:#7ea6e0;--c:#e1e8df"></span></button><button class="palette-option" data-palette="rose" aria-label="玫瑰雾" aria-pressed="false"><span style="--a:#edb8cc;--b:#bdacd8;--c:#efcfa8"></span></button><button class="palette-option" data-palette="moss" aria-label="林间微光" aria-pressed="false"><span style="--a:#bdcf9e;--b:#e6d5a7;--c:#82aea0"></span></button></div></div>
+      <div class="setting-section sliders"><label class="setting-label" for="sensitivity">声音响应<output for="sensitivity" id="sensitivity-value">1.00×</output></label><input id="sensitivity" type="range" min=".3" max="2" step=".05" value="1"><p>声音起伏对画面的影响程度</p><label class="setting-label" for="motion">流动速度<output for="motion" id="motion-value">0.70×</output></label><input id="motion" type="range" min="0" max="1.5" step=".05" value=".7"><p>从缓慢舒展，到轻盈跃动</p><label class="setting-label" for="density">元素密度<output for="density" id="density-value">100</output></label><input id="density" type="range" min="40" max="180" step="5" value="100"><label class="setting-label glow-label" for="glow">柔光强度<output for="glow" id="glow-value">60%</output></label><input id="glow" type="range" min="0" max="1" step=".05" value=".6"></div>
+      <div class="setting-section"><label class="setting-label" for="artwork-title">作品标题<span>可选</span></label><input class="title-input" id="artwork-title" maxlength="42" placeholder="为这段声音起个名字" value="AMBER & AIR"></div>
+      <div class="export-card"><span class="panel-kicker">TAKE IT WITH YOU</span><h3>留下这一刻</h3><p>把喜欢的声音，变成你的作品。</p><button id="snapshot-button" class="button export-primary"><svg><use href="#i-image"/></svg>导出画面 <span>PNG ↗</span></button><button id="record-button" class="button record-button"><svg><use href="#i-film"/></svg>录制短片<span>最长 30s</span></button><small id="record-help">实时有声录制 · 请保持页面在前台</small></div>
+      <button id="download-demo" class="text-button download-demo">下载原创示例音频 <span>↓</span></button>
+    </aside>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="help-dialog"><button id="close-help" class="dialog-close" aria-label="关闭使用说明">×</button><div class="panel-kicker">A LITTLE GUIDE</div><h2>让音乐成为你的画笔。</h2><ol><li><b>选择一段声音</b><p>播放原创示例，或导入自己的音乐。文件在浏览器本机处理。</p></li><li><b>找到它的形状</b><p>切换花瓣、星环或几何主题，调整配色和声音响应。拖动播放进度即可预览不同片段。</p></li><li><b>保存你的创作</b><p>导出 PNG，或实时录制最长 30 秒的有声短片。保存方案会下载参数 JSON，重开时需重新选择原音频。</p></li></ol><p class="help-note">空格键播放 / 暂停（输入控件内除外）。低中高频能量以共同尺度归一化；dBFS 显示原始短时 RMS。声音突变响应并不等同于节拍识别。视频格式取决于浏览器支持。</p><button id="help-start" class="button export-primary">开始创作 ↗</button></dialog>
+  <script type="module" src="./app.js"></script>
+</body></html>

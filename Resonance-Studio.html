@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f3ed">
+  <meta name="description" content="共振视觉工作台：导入音乐，用真实音频特征驱动花瓣、星环与几何动画，在浏览器内制作动态视觉作品。">
+  <title>Resonance Studio · 本地直接打开版</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23141a1b'/%3E%3Cg fill='none' stroke='%23f5cf91' stroke-width='2'%3E%3Cellipse cx='32' cy='32' rx='10' ry='22'/%3E%3Cellipse cx='32' cy='32' rx='10' ry='22' transform='rotate(60 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='10' ry='22' transform='rotate(120 32 32)'/%3E%3C/g%3E%3C/svg%3E">
+  <style>
+:root{--paper:#f5f3ed;--panel:#fbfaf6;--ink:#303a34;--muted:#96988c;--line:#e4e4d9;--accent:#bf6b4d;--green:#6d8066;--serif:Georgia,"Songti SC","Noto Serif CJK SC",serif;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--paper);font-size:13px}
+*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button,a,input{-webkit-tap-highlight-color:transparent}button{cursor:pointer;color:inherit}button{border:0;background:none}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:4px}a{color:inherit;text-decoration:none}svg{width:19px;height:19px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.icon-defs{position:absolute;width:0;height:0;overflow:hidden}[hidden]{display:none!important}.topbar{height:84px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 27px;background:var(--panel);gap:24px}.brand{display:flex;align-items:center;gap:11px;min-width:210px}.brand-icon{display:grid;place-items:center;background:var(--ink);color:#f3d3a0;width:43px;height:43px;border-radius:13px}.brand-icon svg{width:29px;height:29px;stroke-width:1}.brand>span:last-child{font-size:23px;font-family:var(--serif);letter-spacing:-.9px;line-height:1}.brand-studio{font-style:italic;font-size:20px;color:#777f70;margin-left:4px}.brand small{display:block;font:10px sans-serif;letter-spacing:3px;color:var(--muted);margin-top:8px}.workspace-label{font-size:11px;color:#999d91;margin-right:auto}.workspace-label span{margin:0 15px;color:#c5c6ba}.workspace-label b{font-weight:500;color:#656f60}.header-actions{display:flex;gap:17px;align-items:center}.local-badge{font-size:10px;color:#87917c;white-space:nowrap}.local-badge>span,.live-dot{display:inline-block;width:6px;height:6px;background:#8f9f72;border-radius:50%;margin-right:6px}.icon-button{width:30px;height:30px;display:inline-grid;place-items:center;border-radius:6px;color:#8b9083;padding:0}.icon-button:hover{background:#eaece2;color:var(--ink)}.button{height:37px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:11px;font-weight:500;white-space:nowrap;padding:0 13px}.button svg{width:15px;height:15px}.secondary{border:1px solid #dadfd1;background:#f5f5ec}.secondary:hover{background:#ebeee1}.workspace{display:grid;grid-template-columns:240px minmax(460px,1fr) 246px;max-width:1800px;min-height:calc(100vh - 84px);margin:auto}.library-panel{background:var(--panel);border-right:1px solid var(--line);padding:28px 20px 18px}.panel-kicker{font-size:8px;letter-spacing:1.8px;color:#929787;font-weight:500}h2{font-size:14px;font-weight:500;letter-spacing:1px;margin:7px 0 20px}.upload-area{width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;border:1px dashed #cdd3c2;border-radius:8px;background:#f7f7ef;padding:20px 6px 17px;transition:background .2s,border-color .2s}.upload-area:hover,.drag-over .upload-area{background:#edf0e2;border-color:#879c72}.upload-symbol{width:31px;height:31px;border:1px solid #dce0d0;border-radius:9px;display:grid;place-items:center;margin-bottom:3px;color:#7e8d70;background:#fffef7}.upload-symbol svg{width:16px;height:16px}.upload-area b{font-size:11px;font-weight:500}.upload-area>span:not(.upload-symbol){font-size:9px;color:#989d8c}.upload-area small{font-size:8px;color:#adb09e;margin-top:4px}.source-separator{font-size:9px;display:flex;align-items:center;gap:8px;color:#a7aa9c;margin:19px 0 13px}.source-separator:before,.source-separator:after{content:"";height:1px;flex:1;background:#e8e9df}.demo-track{width:100%;display:flex;align-items:center;gap:9px;text-align:left;padding:10px 8px;border:1px solid #e5e8da;border-radius:7px}.demo-track:hover{background:#f3f5e9}.demo-track.active{background:#eff2e5;border-color:#cdd6bc}.album-art,.current-art{display:grid;place-items:center;border-radius:5px;background:linear-gradient(145deg,#d4c69d,#9ba68a);color:#fdf9e7;width:33px;height:36px}.album-art svg{width:21px}.track-copy{flex:1}.track-copy b{font:12px var(--serif);display:block}.track-copy small{display:block;font-size:8px;color:#98a084;margin-top:5px}.track-check{color:#899876;width:15px}.track-check svg{width:14px}.demo-track:not(.active) .track-check{visibility:hidden}.section-divider{height:1px;background:var(--line);margin:25px 0}.section-title{display:flex;justify-content:space-between;align-items:flex-start}.section-title h2{margin-bottom:15px}.count-chip{font:9px ui-monospace,monospace;border:1px solid #e0e2d6;padding:3px 5px;border-radius:4px;color:#9da28e;margin-top:12px}.theme-list{display:grid;gap:10px}.theme-card{padding:0;border:1px solid #e2e4d9;border-radius:7px;overflow:hidden;text-align:left;background:#fbfaf6;transition:border-color .2s,transform .2s}.theme-card:hover{transform:translateY(-2px);border-color:#b2baa1}.theme-card.selected{border-color:#9ba985;box-shadow:0 0 0 1px #9ba985}.theme-card canvas{display:block;width:100%;height:73px;object-fit:cover}.theme-card-footer{display:flex;justify-content:space-between;align-items:center;padding:9px 11px}.theme-card-footer b{font-size:10px;font-weight:500;letter-spacing:1px;display:block}.theme-card-footer small{display:block;font-size:7px;letter-spacing:1px;color:#9ea28e;margin-top:4px}.theme-selected{color:#a3ab93;font-size:16px}.theme-card.selected .theme-selected{color:#70865b}.text-button{font-size:10px;color:#929a84;display:flex;align-items:center;justify-content:center;gap:6px}.text-button:hover{color:#526b41}.text-button svg{width:12px}.import-button{margin:19px auto 0}.creation-panel{padding:34px 30px 0;min-width:0;display:flex;flex-direction:column}.creation-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:31px}.creation-heading .panel-kicker{font-size:8px;letter-spacing:2px}h1{font-family:var(--serif);font-size:clamp(21px,2.05vw,32px);font-weight:400;margin:10px 0 0;letter-spacing:2px;white-space:nowrap}h1>span{color:var(--accent)}.edition{font:8px ui-monospace,monospace;text-align:right;line-height:1.9;letter-spacing:1px;color:#a9ad9a}.edition b{font-size:6px;font-weight:400;letter-spacing:.7px}.canvas-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}.preview-label{font-size:9px;display:flex;align-items:center;gap:8px}.preview-label .live-dot{width:5px;height:5px;margin:0;background:var(--accent)}.preview-label b{font-size:10px;font-weight:500}.preview-label>span:last-child{color:#9fa591;border-left:1px solid #d8ddcd;padding-left:10px;margin-left:4px}.canvas-tools{display:flex;align-items:center;gap:9px}.ratio-switch{display:flex;background:#eaece2;border-radius:5px;padding:3px;gap:3px}.ratio-switch button{font-size:8px;font-family:ui-monospace,monospace;padding:5px 8px;border-radius:3px;color:#939b87}.ratio-switch button.active{background:#fcfcf6;box-shadow:0 1px 3px #39432c12;color:#58674b}.stage{position:relative;display:grid;place-items:center;min-height:220px;height:clamp(260px,34vw,480px);background:#e9e9df;border-radius:7px;overflow:hidden;isolation:isolate}.stage>canvas{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;box-shadow:0 0 30px #00000010}.stage:fullscreen{height:100vh;background:#111;display:flex;align-items:center;justify-content:center}.stage:fullscreen canvas{max-height:100vh;max-width:100vw}.stage-play{position:absolute;display:flex;align-items:center;gap:10px;bottom:19%;border:1px solid #d8c5a72b;background:#1b2323aa;color:#d4c3a4;padding:9px 15px;border-radius:30px;font-size:9px;letter-spacing:1px;backdrop-filter:blur(6px)}.stage-play svg{width:12px;height:12px;fill:currentColor}.stage-play:hover{background:#2c3330}.loading{position:absolute;inset:0;background:#172022f5;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;color:#e4cfac}.loading b{font-size:12px;font-weight:400}.loading>span:last-child{font-size:10px;color:#8f9989}.spinner{height:24px;width:24px;border:1px solid #eed9ad30;border-top-color:#eed9ad;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.stage-caption{display:flex;justify-content:space-between;align-items:center;margin:14px 0 23px;font-size:9px;color:#a3a894}.stage-caption>span:last-child{font-size:7px;letter-spacing:1px}.stage-caption i{font-size:13px;font-style:normal;margin-left:7px;color:#b88060}.transport{border:1px solid #dee2d3;background:#f9f9f2;border-radius:7px;padding:15px 17px 13px}.transport-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.current-track{display:flex;align-items:center;gap:10px;min-width:0;width:42%}.current-art{width:32px;height:34px;flex-shrink:0;background:#e1e5d4;color:#899779}.current-art svg{width:18px}.current-track>div{overflow:hidden}.current-track b{font:12px var(--serif);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.current-track span:not(.current-art){font-size:8px;color:#9ca38f;display:block;margin-top:5px;white-space:nowrap}.transport-controls{display:flex;gap:13px;align-items:center}.play-button{width:37px;height:37px;border-radius:50%;display:grid;place-items:center;background:#344638;color:#f3f4e8;box-shadow:0 2px 4px #35462f1a;flex-shrink:0}.play-button:hover{background:#526748}.play-button svg{width:17px;height:17px}.play-button:not(.is-playing) svg{fill:currentColor;stroke-width:1}.volume-control{display:flex;align-items:center;gap:8px;width:100px}.volume-control svg{width:13px;color:#9ea58f}.volume-control input{width:65px}input[type=range]{-webkit-appearance:none;appearance:none;background:#dfe4d4;height:3px;border-radius:4px;cursor:pointer;accent-color:#7f906c}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:9px;border-radius:50%;background:#738a5e;box-shadow:0 0 0 3px #f8f9ef}input[type=range]::-moz-range-thumb{width:9px;height:9px;border:0;border-radius:50%;background:#738a5e}.timeline{display:flex;align-items:center;gap:12px;margin-top:13px}.timeline>span{font:8px ui-monospace,monospace;color:#9ca48c}.waveform-wrap{position:relative;flex:1;height:28px}.waveform-wrap canvas{width:100%;height:100%;display:block}.waveform-wrap input{position:absolute;inset:0;width:100%;height:100%;margin:0;background:none;opacity:0}.waveform-wrap:focus-within{outline:2px solid #a9b49a;outline-offset:3px}.icon-button[aria-pressed=true]{color:#627e4e;background:#e9efdf}.analysis-strip{display:flex;align-items:center;gap:20px;font-size:8px;color:#929c83;padding:17px 4px 18px}.analysis-heading{display:flex;align-items:center;gap:6px;white-space:nowrap}.analysis-heading svg{width:12px;height:12px}.mini-meter{display:flex;align-items:center;gap:8px;flex:1}.mini-meter span{white-space:nowrap}.mini-meter i{display:block;width:100%;max-width:64px;height:3px;background:#e1e5d7;overflow:hidden;border-radius:3px}.mini-meter b{display:block;width:0%;height:100%;background:#9aaa7c;border-radius:3px}.rms-value{white-space:nowrap;font:8px ui-monospace,monospace;min-width:68px;text-align:right}.workspace-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding:20px 0 22px;border-top:1px solid #e3e6d8;color:#a8ad99;font-size:8px;letter-spacing:.5px}.workspace-footer>span:last-child{font-size:7px;letter-spacing:1px}.workspace-footer b{font-weight:400;font-size:12px;color:#a8b193;margin:0 5px}.inspector-panel{padding:29px 22px 22px;border-left:1px solid var(--line);background:#f9f8f2}.inspector-heading{display:flex;align-items:center;justify-content:space-between}.inspector-heading h2{margin-bottom:0}.setting-section{border-bottom:1px solid var(--line);padding:25px 0}.setting-label{display:flex;align-items:center;justify-content:space-between;font-size:10px;margin-bottom:14px}.setting-label>span{font-size:8px;color:#a3aa94}.palette-options{display:flex;gap:12px}.palette-option{padding:3px;border:1px solid transparent;border-radius:50%;width:37px;height:37px}.palette-option span{display:block;width:100%;height:100%;border-radius:50%;background:conic-gradient(var(--a) 0 120deg,var(--b) 120deg 240deg,var(--c) 240deg)}.palette-option.selected{border-color:#919c7d}.palette-option:hover{border-color:#b9bfae}.sliders{padding-top:25px}.sliders input{width:100%;display:block;margin:0}.sliders p{font-size:8px;color:#a9af9d;margin:10px 0 24px}.sliders output{font:9px ui-monospace,monospace;color:#8a9776}.glow-label{margin-top:25px}.title-input{border:1px solid #e0e3d5;border-radius:4px;background:#fdfcf6;width:100%;padding:10px;font:10px ui-monospace,monospace;color:#6e7d5d;outline-offset:2px}.title-input::placeholder{font-family:inherit;color:#b0b6a0}.export-card{margin-top:25px;padding:19px 14px 16px;border-radius:7px;background:#ecefe1;border:1px solid #dfe5d1}.export-card .panel-kicker{font-size:7px;letter-spacing:1.4px}.export-card h3{font:17px var(--serif);letter-spacing:1px;font-weight:400;margin:10px 0}.export-card p{font-size:8px;color:#99a386;line-height:1.7;margin:0 0 17px}.export-primary{background:#344638;color:#fafbef;width:100%;height:36px;font-size:10px}.export-primary:hover{background:#4a6244}.export-primary>span{margin-left:auto;font-size:8px;color:#b5c3a3}.record-button{width:100%;border:1px solid #d0d9bf;margin-top:9px;height:32px;font-size:9px;color:#70845b}.record-button span{margin-left:auto;font-size:8px;color:#a2ae92}.record-button.recording{background:#a4513c;color:white;border-color:#a4513c}.record-button.recording span{color:#f7d6c6}.export-card small{display:block;font-size:7px;text-align:center;color:#a1ad91;margin-top:10px}.download-demo{width:100%;margin-top:19px;font-size:8px}.download-demo>span{margin-left:auto}.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#344638;color:#f1f4e7;font-size:11px;line-height:1.7;max-width:min(90vw,600px);padding:11px 20px;border-radius:7px;z-index:30;box-shadow:0 6px 30px #16241422;transition:opacity .2s,transform .2s}.toast.visible{opacity:1;transform:translate(-50%,0)}dialog{border:1px solid #d4dbc8;background:#f9f8f1;border-radius:13px;max-width:490px;width:calc(100% - 32px);padding:37px;color:var(--ink);box-shadow:0 20px 80px #1f2c3230}dialog::backdrop{background:#1d2b3577;backdrop-filter:blur(4px)}dialog h2{font:24px var(--serif);letter-spacing:1px;margin:15px 0 25px}.dialog-close{position:absolute;right:15px;top:12px;font-size:23px;color:#9aa18c}dialog ol{padding-left:20px;font-size:12px}dialog li{padding-left:7px;margin:18px 0}dialog li b{font-weight:500}dialog p{font-size:11px;color:#8c967f;line-height:1.9}.help-note{border-top:1px solid var(--line);padding-top:18px;font-size:10px}.recording-badge{position:absolute;top:15px;right:15px;color:#f6bca3;background:#4b221ea0;border:1px solid #ae665b77;border-radius:5px;padding:6px 10px;font-size:9px}
+@media(min-width:1600px){.workspace{grid-template-columns:270px minmax(460px,1fr) 270px}.library-panel{padding-left:25px;padding-right:25px}.creation-panel{padding-left:44px;padding-right:44px}.theme-card canvas{height:90px}.stage{height:490px}.creation-heading{margin-bottom:38px}}
+@media(max-width:1150px){.workspace{grid-template-columns:208px minmax(400px,1fr) 212px}.library-panel{padding-left:14px;padding-right:14px}.inspector-panel{padding-left:16px;padding-right:16px}.creation-panel{padding:29px 21px 0}.topbar{padding:0 20px}.workspace-label{display:none}.creation-heading .edition{display:none}h1{font-size:23px}.volume-control{width:65px}.volume-control input{width:42px}.transport-controls{gap:8px}.analysis-strip{gap:12px}.palette-options{gap:7px}.palette-option{width:34px;height:34px}}
+@media(max-width:940px){.workspace{grid-template-columns:190px minmax(380px,1fr)}.inspector-panel{grid-column:1/-1;border-top:1px solid var(--line);border-left:0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;padding:23px}.inspector-heading{grid-column:1/-1}.setting-section{padding:10px 0;border:0}.sliders{grid-column:2;grid-row:2/4}.export-card{grid-column:3;grid-row:2/4;margin:0}.download-demo{grid-column:3;margin-top:0}.library-panel{grid-row:1}.creation-panel{min-height:750px}.workspace-footer{margin-top:auto}.local-badge{display:none}.stage{height:330px}.analysis-strip{gap:10px}.rms-value{display:none}}
+@media(max-width:640px){.topbar{height:73px;padding:0 16px;gap:8px}.brand{min-width:0}.brand-icon{width:34px;height:34px;border-radius:10px}.brand-icon svg{width:23px;height:23px}.brand>span:last-child{font-size:20px}.brand-studio{font-size:17px}.brand small{font-size:8px;letter-spacing:2px}.header-actions{gap:8px}.secondary{font-size:10px;padding:0 9px;height:33px}.secondary svg{display:none}.workspace{display:flex;flex-direction:column;min-height:0}.creation-panel{order:0;min-height:0;padding:27px 16px 0}.library-panel{order:1;border-right:0;border-top:1px solid var(--line);padding:23px 16px}.inspector-panel{order:2;display:block;padding:25px 16px}.creation-heading{margin-bottom:23px}.creation-heading .panel-kicker{font-size:7px;letter-spacing:1.5px}h1{font-size:23px;letter-spacing:1px;margin-top:10px}.stage{height:300px;min-height:220px}.stage-caption{font-size:8px;margin-bottom:18px}.stage-caption>span:last-child{font-size:6px}.transport{padding:12px}.transport-controls{gap:7px}.current-track{width:50%}.volume-control{width:auto}.volume-control input{display:none}.transport-top{gap:4px}.current-track b{font-size:11px}.timeline{gap:9px}.analysis-strip{padding-bottom:20px}.mini-meter{gap:5px}.workspace-footer{padding:15px 0 18px}.theme-list{grid-template-columns:repeat(3,1fr);gap:9px}.theme-card canvas{height:66px}.theme-card-footer{padding:9px 7px}.theme-card-footer b{font-size:9px}.theme-card-footer small{font-size:5px;letter-spacing:.5px}.theme-selected{display:none}.library-panel>.panel-kicker,.library-panel>h2{display:none}.upload-area{padding:15px 9px;gap:6px}.upload-area small{margin-top:1px}.source-separator{margin:15px 0 10px}.demo-track{padding:8px 12px}.section-divider{margin:21px 0}.section-title h2{margin-bottom:13px}.import-button{margin-top:17px}.inspector-heading{margin-bottom:15px}.setting-section{padding:18px 0;border-bottom:1px solid var(--line)}.palette-options{gap:16px}.palette-option{width:39px;height:39px}.sliders{display:grid;grid-template-columns:1fr 1fr;column-gap:25px}.sliders label,.sliders input,.sliders p{grid-column:1/-1}.sliders p{margin-bottom:20px}.glow-label{margin-top:23px}.export-card{margin-top:23px}.export-card p{font-size:10px}.export-card .button{height:39px;font-size:11px}.export-card small{font-size:9px}.download-demo{margin:19px auto}.text-button{font-size:10px}.count-chip{margin-top:9px}.stage-play{font-size:8px;padding:8px 12px;bottom:12%}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.spinner{animation-duration:2s}.theme-card{transition:none}}
+
+</style>
+</head>
+<body>
+  <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 10v4m4-8v12m5-16v20m5-16v12m4-8v4"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h12l4 4v14H3V3h2Zm2 0v7h10V3M7 21v-7h10v7"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m3 17 6-6 4 4 3-3 5 5"/><circle cx="15.5" cy="7.5" r="1"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M4 10V7h15l-3-3m4 10v3H5l3 3"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 1 8M4 4v6h6"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="m11 4-6 5H2v6h3l6 5Zm4 4a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v7m0-11v1"/></symbol>
+    <symbol id="i-flower" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="4" ry="10"/><ellipse cx="12" cy="12" rx="4" ry="10" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="4" ry="10" transform="rotate(120 12 12)"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M5 5v14m14-14L8 12l11 7Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16m10-16v16M3 9h4m-4 6h4M17 9h4m-4 6h4"/></symbol>
+  </defs></svg>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Resonance Studio 首页"><span class="brand-icon"><svg><use href="#i-flower"/></svg></span><span>resonance<span class="brand-studio">studio</span><small>共振视觉工作台</small></span></a>
+    <div class="workspace-label">声音与视觉的创作空间 <span>/</span> <b>新建作品</b></div>
+    <div class="header-actions"><span class="local-badge"><span></span> 音频在本机处理</span><button id="help-button" class="icon-button" aria-label="使用说明"><svg><use href="#i-info"/></svg></button><button id="save-project" class="button secondary"><svg><use href="#i-save"/></svg>保存方案</button></div>
+  </header>
+  <div class="workspace">
+    <aside class="library-panel">
+      <div class="panel-kicker">YOUR MATERIAL</div><h2>声音素材</h2>
+      <button class="upload-area" id="upload-button"><span class="upload-symbol"><svg><use href="#i-upload"/></svg></span><b>导入你的音乐</b><span>点击选择，或拖入音频文件</span><small>WAV / MP3 · 最长 3 分钟 · 32 MB</small></button>
+      <input type="file" id="audio-file" accept="audio/*,.wav,.mp3,.m4a,.ogg,.flac" hidden>
+      <div class="source-separator"><span>也可以从这里开始</span></div>
+      <button id="demo-button" class="demo-track active"><span class="album-art"><svg><use href="#i-wave"/></svg></span><span class="track-copy"><b>Amber & Air</b><small>原创合成示例 · 00:38</small></span><span class="track-check"><svg><use href="#i-check"/></svg></span></button>
+      <div class="section-divider"></div><div class="section-title"><div><div class="panel-kicker">VISUAL COLLECTION</div><h2>选择视觉</h2></div><span class="count-chip">03</span></div>
+      <div class="theme-list" role="group" aria-label="视觉主题">
+        <button class="theme-card selected" data-theme="bloom" aria-pressed="true"><canvas width="384" height="160" aria-hidden="true"></canvas><span class="theme-card-footer"><span><b>花瓣粒子</b><small>SONIC BLOOM</small></span><span class="theme-selected">↗</span></span></button>
+        <button class="theme-card" data-theme="orbit" aria-pressed="false"><canvas width="384" height="160" aria-hidden="true"></canvas><span class="theme-card-footer"><span><b>星环频谱</b><small>ORBITAL ECHO</small></span><span class="theme-selected">↗</span></span></button>
+        <button class="theme-card" data-theme="geometry" aria-pressed="false"><canvas width="384" height="160" aria-hidden="true"></canvas><span class="theme-card-footer"><span><b>几何律动</b><small>FORM & FREQUENCY</small></span><span class="theme-selected">↗</span></span></button>
+      </div>
+      <button id="import-project" class="text-button import-button"><svg><use href="#i-upload"/></svg>打开已保存的方案</button><input type="file" id="project-file" accept=".json,application/json" hidden>
+    </aside>
+    <main class="creation-panel">
+      <div class="creation-heading"><div><div class="panel-kicker">SOUND INTO SOMETHING BEAUTIFUL</div><h1>把声音，变成可见的诗<span>。</span></h1></div><span class="edition">VOL. 01<br><b>THE SOUND SERIES</b></span></div>
+      <div class="canvas-toolbar"><div class="preview-label"><span class="live-dot"></span><b>创作预览</b><span id="theme-name">花瓣粒子</span></div><div class="canvas-tools"><div class="ratio-switch" role="group" aria-label="画布比例"><button data-ratio="16:9" class="active" aria-pressed="true">16:9</button><button data-ratio="1:1" aria-pressed="false">1:1</button><button data-ratio="9:16" aria-pressed="false">9:16</button></div><button id="fullscreen-button" class="icon-button" aria-label="全屏预览"><svg><use href="#i-expand"/></svg></button></div></div>
+      <div class="stage" id="stage"><canvas id="visual-canvas" width="1280" height="720" aria-label="音乐驱动的动态视觉预览"></canvas><div class="loading" id="loading"><span class="spinner"></span><b id="loading-title">正在准备声音与画面</b><span id="loading-detail">生成原创示例音乐…</span></div><button id="stage-play" class="stage-play" aria-label="播放音乐并开始预览"><svg><use href="#i-play"/></svg><span>听见它，也看见它</span></button><div class="recording-badge" id="recording-badge" hidden>● 正在录制</div></div>
+      <div class="stage-caption"><span id="visual-caption">每一次起伏，都有绽放的形状。</span><span>MADE OF SOUND <i>✳</i></span></div>
+      <section class="transport" aria-label="音频播放器"><div class="transport-top"><div class="current-track"><span class="current-art"><svg><use href="#i-wave"/></svg></span><div><b id="track-title">Amber & Air</b><span id="track-meta">原创示例 · 准备中</span></div></div><div class="transport-controls"><button id="restart-button" class="icon-button" aria-label="回到开头"><svg><use href="#i-back"/></svg></button><button id="play-button" class="play-button" aria-label="播放"><svg><use href="#i-play"/></svg></button><button id="loop-button" class="icon-button" aria-label="循环播放" aria-pressed="false"><svg><use href="#i-repeat"/></svg></button></div><div class="volume-control"><svg><use href="#i-volume"/></svg><input id="volume" type="range" min="0" max="1" step=".01" value=".65" aria-label="音量"></div></div><div class="timeline"><span id="current-time">00:00</span><div class="waveform-wrap"><canvas id="waveform" width="1000" height="70" aria-hidden="true"></canvas><input id="seek" type="range" min="0" max="38.4" step=".01" value="0" aria-label="播放进度"></div><span id="total-time">00:38</span></div></section>
+      <div class="analysis-strip"><div class="analysis-heading"><svg><use href="#i-wave"/></svg><span>声音的此刻</span></div><div class="mini-meter"><span>低频</span><i><b id="meter-low"></b></i></div><div class="mini-meter"><span>中频</span><i><b id="meter-mid"></b></i></div><div class="mini-meter"><span>高频</span><i><b id="meter-high"></b></i></div><div class="rms-value" id="rms-value">−∞ dBFS</div></div>
+      <footer class="workspace-footer"><span>一点声音，无限形状。</span><span>RESONANCE STUDIO <b>✳</b> 2026</span></footer>
+    </main>
+    <aside class="inspector-panel"><div class="inspector-heading"><div><div class="panel-kicker">MAKE IT YOURS</div><h2>雕琢画面</h2></div><button id="reset-button" class="icon-button" aria-label="重置视觉参数"><svg><use href="#i-reset"/></svg></button></div>
+      <div class="setting-section"><label class="setting-label">色彩情绪<span id="palette-name">琥珀日落</span></label><div class="palette-options" role="group" aria-label="配色"><button class="palette-option selected" data-palette="amber" aria-label="琥珀日落" aria-pressed="true"><span style="--a:#f5cf91;--b:#de916b;--c:#e6b6ae"></span></button><button class="palette-option" data-palette="sea" aria-label="海盐蓝" aria-pressed="false"><span style="--a:#a2d6d2;--b:#7ea6e0;--c:#e1e8df"></span></button><button class="palette-option" data-palette="rose" aria-label="玫瑰雾" aria-pressed="false"><span style="--a:#edb8cc;--b:#bdacd8;--c:#efcfa8"></span></button><button class="palette-option" data-palette="moss" aria-label="林间微光" aria-pressed="false"><span style="--a:#bdcf9e;--b:#e6d5a7;--c:#82aea0"></span></button></div></div>
+      <div class="setting-section sliders"><label class="setting-label" for="sensitivity">声音响应<output for="sensitivity" id="sensitivity-value">1.00×</output></label><input id="sensitivity" type="range" min=".3" max="2" step=".05" value="1"><p>声音起伏对画面的影响程度</p><label class="setting-label" for="motion">流动速度<output for="motion" id="motion-value">0.70×</output></label><input id="motion" type="range" min="0" max="1.5" step=".05" value=".7"><p>从缓慢舒展，到轻盈跃动</p><label class="setting-label" for="density">元素密度<output for="density" id="density-value">100</output></label><input id="density" type="range" min="40" max="180" step="5" value="100"><label class="setting-label glow-label" for="glow">柔光强度<output for="glow" id="glow-value">60%</output></label><input id="glow" type="range" min="0" max="1" step=".05" value=".6"></div>
+      <div class="setting-section"><label class="setting-label" for="artwork-title">作品标题<span>可选</span></label><input class="title-input" id="artwork-title" maxlength="42" placeholder="为这段声音起个名字" value="AMBER & AIR"></div>
+      <div class="export-card"><span class="panel-kicker">TAKE IT WITH YOU</span><h3>留下这一刻</h3><p>把喜欢的声音，变成你的作品。</p><button id="snapshot-button" class="button export-primary"><svg><use href="#i-image"/></svg>导出画面 <span>PNG ↗</span></button><button id="record-button" class="button record-button"><svg><use href="#i-film"/></svg>录制短片<span>最长 30s</span></button><small id="record-help">实时有声录制 · 请保持页面在前台</small></div>
+      <button id="download-demo" class="text-button download-demo">下载原创示例音频 <span>↓</span></button>
+    </aside>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="help-dialog"><button id="close-help" class="dialog-close" aria-label="关闭使用说明">×</button><div class="panel-kicker">A LITTLE GUIDE</div><h2>让音乐成为你的画笔。</h2><ol><li><b>选择一段声音</b><p>播放原创示例，或导入自己的音乐。文件在浏览器本机处理。</p></li><li><b>找到它的形状</b><p>切换花瓣、星环或几何主题，调整配色和声音响应。拖动播放进度即可预览不同片段。</p></li><li><b>保存你的创作</b><p>导出 PNG，或实时录制最长 30 秒的有声短片。保存方案会下载参数 JSON，重开时需重新选择原音频。</p></li></ol><p class="help-note">空格键播放 / 暂停（输入控件内除外）。低中高频能量以共同尺度归一化；dBFS 显示原始短时 RMS。声音突变响应并不等同于节拍识别。视频格式取决于浏览器支持。</p><button id="help-start" class="button export-primary">开始创作 ↗</button></dialog>
+  <script>
+(()=>{
+/** Pure DSP shared by the worker and Node tests. No browser globals. */
+const clamp = (x, lo = 0, hi = 1) => Math.max(lo, Math.min(hi, x));
+
+function fftMagnitude(input) {
+  const n = input.length;
+  if (n < 2 || (n & (n - 1))) throw new Error('FFT size must be a power of two');
+  const re = Float64Array.from(input), im = new Float64Array(n);
+  for (let i = 1, j = 0; i < n; i++) {
+    let bit = n >> 1;
+    for (; j & bit; bit >>= 1) j ^= bit;
+    j ^= bit;
+    if (i < j) [re[i], re[j]] = [re[j], re[i]];
+  }
+  for (let len = 2; len <= n; len <<= 1) {
+    const angle = -2 * Math.PI / len, wr0 = Math.cos(angle), wi0 = Math.sin(angle);
+    for (let offset = 0; offset < n; offset += len) {
+      let wr = 1, wi = 0;
+      for (let j = 0; j < len / 2; j++) {
+        const a = offset + j, b = a + len / 2;
+        const tr = re[b] * wr - im[b] * wi, ti = re[b] * wi + im[b] * wr;
+        re[b] = re[a] - tr; im[b] = im[a] - ti;
+        re[a] += tr; im[a] += ti;
+        const next = wr * wr0 - wi * wi0;
+        wi = wr * wi0 + wi * wr0; wr = next;
+      }
+    }
+  }
+  const out = new Float32Array(n / 2 + 1);
+  for (let k = 0; k < out.length; k++) out[k] = Math.hypot(re[k], im[k]) / n;
+  return out;
+}
+
+function percentile(values, q = .95) {
+  if (!values.length) return 0;
+  const sorted = Array.from(values).sort((a, b) => a - b);
+  return sorted[Math.min(sorted.length - 1, Math.floor(q * (sorted.length - 1)))];
+}
+
+/** Centered Hann STFT. Bands store windowed spectral power, not calibrated SPL. */
+function analyzeAudio(samples, sampleRate, progress = () => {}) {
+  if (!samples.length || !Number.isFinite(sampleRate) || sampleRate < 1000) throw new Error('Invalid audio');
+  const fftSize = 2048, hop = Math.max(128, Math.round(sampleRate * .02322));
+  const frames = Math.ceil(samples.length / hop) + 1, binCount = 64;
+  const rms = new Float32Array(frames), low = new Float32Array(frames);
+  const mid = new Float32Array(frames), high = new Float32Array(frames), onset = new Float32Array(frames);
+  const spectrum = new Float32Array(frames * binCount), window = new Float32Array(fftSize);
+  const buffer = new Float32Array(fftSize), waveform = new Float32Array(240);
+  const previous = new Float32Array(fftSize / 2 + 1);
+  const topFrequency = Math.min(12000, sampleRate / 2);
+  for (let i = 0; i < fftSize; i++) window[i] = .5 - .5 * Math.cos(2 * Math.PI * i / (fftSize - 1));
+  for (let b = 0; b < waveform.length; b++) {
+    const start = Math.floor(b * samples.length / waveform.length);
+    const end = Math.max(start + 1, Math.floor((b + 1) * samples.length / waveform.length));
+    let sum = 0;
+    for (let i = start; i < Math.min(end, samples.length); i++) sum += samples[i] ** 2;
+    waveform[b] = Math.sqrt(sum / Math.max(1, Math.min(end, samples.length) - start));
+  }
+  for (let f = 0; f < frames; f++) {
+    const start = f * hop - fftSize / 2;
+    let sum = 0;
+    for (let i = 0; i < fftSize; i++) {
+      const x = samples[start + i] ?? 0;
+      sum += x * x; buffer[i] = x * window[i];
+    }
+    rms[f] = Math.sqrt(sum / fftSize);
+    const mags = fftMagnitude(buffer);
+    let flux = 0;
+    for (let k = 1; k < mags.length; k++) {
+      const hz = k * sampleRate / fftSize, p = mags[k] ** 2;
+      if (hz >= 40 && hz < 250) low[f] += p;
+      else if (hz >= 250 && hz < 2000) mid[f] += p;
+      else if (hz >= 2000 && hz <= Math.min(10000, sampleRate / 2)) high[f] += p;
+      flux += Math.max(0, mags[k] - previous[k]); previous[k] = mags[k];
+    }
+    onset[f] = f ? flux : 0;
+    for (let b = 0; b < binCount; b++) {
+      const a = 40 * (topFrequency / 40) ** (b / binCount);
+      const z = 40 * (topFrequency / 40) ** ((b + 1) / binCount);
+      const ka = Math.max(1, Math.floor(a * fftSize / sampleRate));
+      const kz = Math.min(mags.length - 1, Math.max(ka, Math.ceil(z * fftSize / sampleRate)));
+      let power = 0;
+      for (let k = ka; k <= kz; k++) power += mags[k] ** 2;
+      spectrum[f * binCount + b] = Math.sqrt(power / Math.max(1, kz - ka + 1));
+    }
+    if (f % 80 === 0) progress(f / frames);
+  }
+  const rawRms = rms.slice();
+  const smoothFrames = Math.max(1, Math.round(.06 / (hop / sampleRate)));
+  for (const array of [low, mid, high]) for (let i = 0; i < array.length; i++) array[i] = Math.sqrt(array[i]);
+  const bandScale = Math.max(percentile(low), percentile(mid), percentile(high)) || 1;
+  for (const array of [rms, low, mid, high, onset]) {
+    const isBand = array === low || array === mid || array === high;
+    const scale = isBand ? bandScale : percentile(array) || 1;
+    let value = 0;
+    for (let i = 0; i < array.length; i++) {
+      const target = clamp(array[i] / scale);
+      value += (target - value) * (array === onset ? .65 : 1 / smoothFrames);
+      array[i] = value;
+    }
+  }
+  const spectrumScale = percentile(spectrum, .99) || 1;
+  for (let i = 0; i < spectrum.length; i++) spectrum[i] = clamp(Math.sqrt(spectrum[i] / spectrumScale));
+  const waveScale = Math.max(...waveform) || 1;
+  for (let i = 0; i < waveform.length; i++) waveform[i] /= waveScale;
+  progress(1);
+  return { frames, hop, sampleRate, fftSize, binCount, rms, rawRms, low, mid, high, onset, spectrum, waveform };
+}
+
+function featureAt(data, time) {
+  const x = clamp(time * data.sampleRate / data.hop, 0, data.frames - 1);
+  const a = Math.floor(x), b = Math.min(a + 1, data.frames - 1), u = x - a;
+  const result = {};
+  for (const name of ['rms', 'rawRms', 'low', 'mid', 'high', 'onset']) result[name] = data[name][a] * (1 - u) + data[name][b] * u;
+  result.spectrum = new Float32Array(data.binCount);
+  for (let k = 0; k < data.binCount; k++) result.spectrum[k] = data.spectrum[a * data.binCount + k] * (1 - u) + data.spectrum[b * data.binCount + k] * u;
+  return result;
+}
+
+function seededRandom(seed) {
+  let state = seed >>> 0;
+  return () => { state += 0x6D2B79F5; let t = state; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}
+
+/** Original procedural demo composition: 16 bars, 100 BPM, A minor. */
+function synthesizeDemo(sampleRate = 22050) {
+  const beat = .6, duration = beat * 64, samples = new Float32Array(Math.round(sampleRate * duration));
+  const rng = seededRandom(7031), chords = [[57,60,64],[53,57,60],[60,64,67],[55,59,62]];
+  const hz = midi => 440 * 2 ** ((midi - 69) / 12);
+  for (let i = 0; i < samples.length; i++) {
+    const t = i / sampleRate, bar = Math.floor(t / (4 * beat));
+    const chord = chords[bar % 4], bt = t % beat, half = t % (beat / 2);
+    let x = 0;
+    for (let n = 0; n < 3; n++) {
+      const f = hz(chord[n]);
+      const envelope = Math.min(1, (t % (beat * 4)) / .25) * Math.min(1, (beat * 4 - t % (beat * 4)) / .4);
+      x += .045 * envelope * (Math.sin(2 * Math.PI * f * t) + .3 * Math.sin(2 * Math.PI * f * 1.003 * t));
+    }
+    const step = Math.floor(t / (beat / 2)), arp = hz(chord[step % 3] + 12);
+    x += .13 * Math.exp(-half * 10) * (Math.sin(2 * Math.PI * arp * t) + .2 * Math.sin(4 * Math.PI * arp * t));
+    x += .12 * Math.exp(-bt * 5) * Math.sin(2 * Math.PI * hz(chord[0] - 24) * t);
+    x += .28 * Math.exp(-bt * 25) * Math.sin(2 * Math.PI * (45 * bt + 2.5 * (1 - Math.exp(-bt * 28))));
+    const noise = rng() * 2 - 1;
+    x += .035 * Math.exp(-half * 75) * noise;
+    if (Math.floor(t / beat) % 2) x += .06 * Math.exp(-bt * 30) * noise;
+    const fade = Math.min(1, t / .4, (duration - t) / 1.8);
+    samples[i] = Math.tanh(x * 1.25) * fade;
+  }
+  return { samples, sampleRate, duration };
+}
+
+function encodeWav(samples, sampleRate) {
+  const buffer = new ArrayBuffer(44 + samples.length * 2), view = new DataView(buffer);
+  const str = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
+  str(0,'RIFF'); view.setUint32(4,36 + samples.length * 2,true); str(8,'WAVE'); str(12,'fmt ');
+  view.setUint32(16,16,true); view.setUint16(20,1,true); view.setUint16(22,1,true); view.setUint32(24,sampleRate,true);
+  view.setUint32(28,sampleRate * 2,true); view.setUint16(32,2,true); view.setUint16(34,16,true); str(36,'data');
+  view.setUint32(40,samples.length * 2,true);
+  for (let i = 0; i < samples.length; i++) { const x = clamp(samples[i],-1,1); view.setInt16(44 + i * 2, x < 0 ? x * 32768 : x * 32767, true); }
+  return buffer;
+}
+
+
+const PALETTES = {
+  amber: {name:'琥珀日落', colors:['#f5cf91','#de916b','#e6b6ae'], bg:'#141a1b'},
+  sea: {name:'海盐蓝', colors:['#a2d6d2','#7ea6e0','#e1e8df'], bg:'#101c24'},
+  rose: {name:'玫瑰雾', colors:['#edb8cc','#bdacd8','#efcfa8'], bg:'#201923'},
+  moss: {name:'林间微光', colors:['#bdcf9e','#e6d5a7','#82aea0'], bg:'#141d19'}
+};
+const THEMES = {
+  bloom: {name:'花瓣粒子',en:'SONIC BLOOM',caption:'每一次起伏，都有绽放的形状。'},
+  orbit: {name:'星环频谱',en:'ORBITAL ECHO',caption:'让频率，留下环绕的轨迹。'},
+  geometry: {name:'几何律动',en:'FORM & FREQUENCY',caption:'把声音，折叠成有序的韵律。'}
+};
+
+function rgba(hex, alpha) {
+  return `rgba(${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)},${clamp(alpha)})`;
+}
+
+function petal(ctx,x,y,length,width,rotation,color,alpha) {
+  ctx.save();ctx.translate(x,y);ctx.rotate(rotation);
+  const grad=ctx.createLinearGradient(0,-length,0,length*.2);
+  grad.addColorStop(0,rgba(color,alpha));grad.addColorStop(.65,rgba(color,alpha*.35));grad.addColorStop(1,rgba(color,.015));
+  ctx.fillStyle=grad;ctx.strokeStyle=rgba(color,alpha*.65);ctx.lineWidth=.7;
+  ctx.beginPath();ctx.moveTo(0,length*.16);
+  ctx.bezierCurveTo(-width,-length*.18,-width*.66,-length*.8,0,-length);
+  ctx.bezierCurveTo(width*.66,-length*.8,width,-length*.18,0,length*.16);
+  ctx.fill();ctx.stroke();ctx.restore();
+}
+
+/** All drawing state derives from audio time, fixed seed and precomputed features. */
+function renderVisual(ctx,w,h,time,features,settings,metadata={}) {
+  const palette=PALETTES[settings.palette] || PALETTES.amber;
+  const theme=THEMES[settings.theme] || THEMES.bloom;
+  const rng=seededRandom(settings.seed || 1738);
+  const scale=Math.min(w,h), gain=settings.sensitivity;
+  const energy=clamp(features.rms*gain),low=clamp(features.low*gain),high=clamp(features.high*gain);
+  const hit=clamp(features.onset*gain),motion=settings.motion;
+  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,h);ctx.fillStyle=palette.bg;ctx.fillRect(0,0,w,h);
+  const vignette=ctx.createRadialGradient(w*.5,h*.49,0,w*.5,h*.5,scale*.85);
+  vignette.addColorStop(0,rgba(palette.colors[0],.065+.055*energy*settings.glow));vignette.addColorStop(1,'rgba(0,0,0,.3)');
+  ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
+  const dots=Math.floor(settings.density*.8);
+  for(let i=0;i<dots;i++) {
+    const x0=rng(),y0=rng(),speed=.3+rng(),phase=rng()*6.28;
+    const x=(x0*w+Math.sin(time*.12*motion+phase)*scale*.025+w)%w;
+    const y=(y0*h-time*speed*motion*1.7+h*100)%h;
+    ctx.fillStyle=rgba(palette.colors[i%3],.12+high*.2*(.5+.5*Math.sin(time+phase)));
+    ctx.beginPath();ctx.arc(x,y,(.5+rng())*scale/600,0,Math.PI*2);ctx.fill();
+  }
+  const cx=w*.5,cy=h*.49;
+  ctx.save();ctx.translate(cx,cy);
+  if(settings.theme==='bloom') {
+    const base=scale*(.135+.026*low),rotation=time*.055*motion;
+    const count=Math.round(settings.density/5);
+    for(let layer=3;layer>=0;layer--) {
+      const n=count+layer*3;
+      for(let i=0;i<n;i++) {
+        const a=i/n*Math.PI*2+rotation*(layer%2?-1:1)+layer*.22;
+        const band=features.spectrum[(i*3+layer*7)%features.spectrum.length]||0;
+        const length=base*(1.05+layer*.28)*(1+band*.14*gain+hit*.08);
+        petal(ctx,Math.sin(a)*scale*.007,Math.cos(a)*scale*.007,length,length*(.23+layer*.025),a,palette.colors[layer%3],(.24+energy*.15)*(1-layer*.08));
+      }
+    }
+    ctx.strokeStyle=rgba(palette.colors[0],.45);ctx.lineWidth=.8;
+    for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(0,0,scale*(.027+i*.009)+low*scale*.006,0,Math.PI*2);ctx.stroke();}
+    ctx.fillStyle=rgba(palette.colors[0],.8);ctx.beginPath();ctx.arc(0,0,scale*.005*(1+hit),0,Math.PI*2);ctx.fill();
+  } else if(settings.theme==='orbit') {
+    const radius=scale*(.18+.016*low), bins=features.spectrum;
+    ctx.rotate(time*.025*motion);
+    for(let ring=0;ring<3;ring++) {
+      ctx.save();ctx.rotate(ring*.8+time*.08*motion*(ring%2?1:-1));ctx.scale(1,.42+ring*.14);
+      ctx.strokeStyle=rgba(palette.colors[ring],.3+energy*.2);ctx.lineWidth=scale*.0011;
+      ctx.beginPath();ctx.arc(0,0,radius*(1.15+ring*.3),0,Math.PI*2);ctx.stroke();ctx.restore();
+    }
+    const count=Math.min(128,Math.round(settings.density));
+    for(let i=0;i<count;i++) {
+      const a=i/count*Math.PI*2,v=bins[Math.floor(i/count*bins.length)]||0;
+      const r=radius*(.98+Math.sin(a*4+time*.5*motion)*.02);
+      const end=r+scale*(.008+v*.095*gain);
+      ctx.strokeStyle=rgba(palette.colors[Math.floor(i/count*3)],.35+v*.55);ctx.lineWidth=scale*.0025;
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r);ctx.lineTo(Math.cos(a)*end,Math.sin(a)*end);ctx.stroke();
+    }
+    ctx.fillStyle=rgba(palette.colors[0],.65);ctx.font=`${scale*.021}px Georgia,serif`;ctx.textAlign='center';ctx.fillText('RESONANCE',0,scale*.006);
+  } else {
+    const rows=5,cols=Math.max(5,Math.min(11,Math.round(settings.density/16))),spacing=scale*.075;
+    for(let row=0;row<rows;row++)for(let col=0;col<cols;col++) {
+      const idx=row*cols+col,v=features.spectrum[idx%features.spectrum.length]||0;
+      const x=(col-(cols-1)/2)*spacing,y=(row-2)*spacing;
+      const s=spacing*(.22+v*.42*gain),a=time*.1*motion+(row+col)*.17+hit*.12;
+      ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.strokeStyle=rgba(palette.colors[(row+col)%3],.3+v*.5);
+      ctx.fillStyle=rgba(palette.colors[(row+col)%3],.025+v*.09);ctx.lineWidth=scale*.0011;
+      ctx.beginPath();ctx.moveTo(0,-s);ctx.lineTo(s,0);ctx.lineTo(0,s);ctx.lineTo(-s,0);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+    }
+  }
+  ctx.restore();
+  if(settings.glow>.1) {
+    const halo=ctx.createRadialGradient(cx,cy,0,cx,cy,scale*.24);
+    halo.addColorStop(0,rgba(palette.colors[0],energy*.025*settings.glow));halo.addColorStop(1,'transparent');
+    ctx.fillStyle=halo;ctx.fillRect(0,0,w,h);
+  }
+  const margin=scale*.068;
+  ctx.textAlign='left';ctx.fillStyle=rgba(palette.colors[0],.55);ctx.font=`${scale*.017}px ui-monospace,monospace`;
+  ctx.fillText(theme.en,margin,margin);
+  ctx.fillStyle='rgba(239,236,227,.4)';ctx.font=`${scale*.016}px sans-serif`;ctx.fillText('A STUDY IN SOUND & MOTION',margin,h-margin);
+  ctx.textAlign='right';ctx.font=`${scale*.017}px ui-monospace,monospace`;ctx.fillText(`${String(Math.floor(time/60)).padStart(2,'0')}:${(time%60).toFixed(1).padStart(4,'0')}`,w-margin,h-margin);
+  ctx.fillStyle='rgba(239,236,227,.27)';ctx.font=`${scale*.015}px sans-serif`;ctx.fillText(metadata.title||'RESONANCE STUDIO',w-margin,margin);
+}
+
+const DEFAULT_SETTINGS = Object.freeze({theme:'bloom',palette:'amber',ratio:'16:9',sensitivity:1,motion:.7,density:100,glow:.6,seed:1738,title:'AMBER & AIR'});
+const bounds = {sensitivity:[.3,2],motion:[0,1.5],density:[40,180],glow:[0,1],seed:[0,4294967295]};
+function validateProject(value) {
+  if (!value || value.application !== 'resonance-studio' || value.version !== 1 || !value.settings || typeof value.settings !== 'object') throw new Error('这不是支持的 Resonance Studio 方案');
+  const source=value.settings, settings={...DEFAULT_SETTINGS};
+  for(const [key, allowed] of Object.entries({theme:['bloom','orbit','geometry'],palette:['amber','sea','rose','moss'],ratio:['16:9','1:1','9:16']})) {
+    if(!allowed.includes(source[key])) throw new Error('方案中的主题、配色或比例无效');
+    settings[key]=source[key];
+  }
+  for(const [key,[min,max]] of Object.entries(bounds)) {
+    if(typeof source[key]!=='number'||!Number.isFinite(source[key])||source[key]<min||source[key]>max) throw new Error('方案参数超出支持范围');
+    settings[key]=key==='density'||key==='seed'?Math.round(source[key]):source[key];
+  }
+  settings.title=typeof source.title==='string'?source.title.slice(0,42):'';
+  return {settings,audio:value.audio&&typeof value.audio==='object'?value.audio:null};
+}
+
+/** AudioContext.currentTime is the transport clock; rendering never advances it. */
+class AudioEngine {
+  constructor(onEnded) { this.offset=0;this.playing=false;this.loop=false;this.volume=.65;this.onEnded=onEnded;this.playToken=0; }
+  setTrack(channels,sampleRate) {
+    this.pause();this.offset=0;this.channels=channels;this.sampleRate=sampleRate;
+    this.duration=channels[0].length/sampleRate;this.buffer=null;
+  }
+  async ensureContext() {
+    if(!this.context) {
+      const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+      if(!AudioContextClass) throw new Error('当前浏览器不支持 Web Audio，请使用新版 Chrome、Edge 或 Firefox');
+      this.context=new AudioContextClass();this.gain=this.context.createGain();this.gain.gain.value=this.volume;
+      this.gain.connect(this.context.destination);
+      this.recordDestination=this.context.createMediaStreamDestination();this.gain.connect(this.recordDestination);
+    }
+    if(!this.buffer&&this.channels) {
+      this.buffer=this.context.createBuffer(this.channels.length,this.channels[0].length,this.sampleRate);
+      this.channels.forEach((channel,i)=>this.buffer.copyToChannel(channel,i));
+    }
+    if(this.context.state!=='running') await this.context.resume();
+  }
+  async play() {
+    if(!this.channels) return;
+    const token=++this.playToken;
+    await this.ensureContext();
+    if(token!==this.playToken||this.playing) return;
+    if(this.offset>=this.duration-.001)this.offset=0;
+    const source=this.context.createBufferSource();source.buffer=this.buffer;source.loop=this.loop;source.connect(this.gain);
+    this.source=source;this.startedAt=this.context.currentTime-this.offset;this.playing=true;
+    source.onended=()=>{source.disconnect();if(this.source===source&&this.playing){this.playing=false;this.offset=this.duration;this.source=null;this.onEnded?.();}};
+    source.start(0,this.offset);
+  }
+  time() {
+    if(!this.playing)return this.offset;
+    const t=Math.max(0,this.context.currentTime-this.startedAt);
+    return this.loop?t%this.duration:Math.min(t,this.duration);
+  }
+  pause() {
+    this.playToken++;
+    if(!this.playing)return;
+    this.offset=this.time();this.playing=false;
+    const source=this.source;this.source=null;
+    if(source){source.onended=null;try{source.stop();}catch{}source.disconnect();}
+  }
+  async seek(time) {const playing=this.playing;this.pause();this.offset=Math.max(0,Math.min(time,this.duration||0));if(playing)await this.play();}
+  setLoop(loop) {this.offset=this.time();if(this.playing)this.startedAt=this.context.currentTime-this.offset;this.loop=loop;if(this.source)this.source.loop=loop;}
+  setVolume(value) {this.volume=value;if(this.gain)this.gain.gain.setTargetAtTime(value,this.context.currentTime,.015);}
+}
+
+const analysisWorkerUrl=URL.createObjectURL(new Blob(["/** Pure DSP shared by the worker and Node tests. No browser globals. */\nconst clamp = (x, lo = 0, hi = 1) => Math.max(lo, Math.min(hi, x));\n\nfunction fftMagnitude(input) {\n  const n = input.length;\n  if (n < 2 || (n & (n - 1))) throw new Error('FFT size must be a power of two');\n  const re = Float64Array.from(input), im = new Float64Array(n);\n  for (let i = 1, j = 0; i < n; i++) {\n    let bit = n >> 1;\n    for (; j & bit; bit >>= 1) j ^= bit;\n    j ^= bit;\n    if (i < j) [re[i], re[j]] = [re[j], re[i]];\n  }\n  for (let len = 2; len <= n; len <<= 1) {\n    const angle = -2 * Math.PI / len, wr0 = Math.cos(angle), wi0 = Math.sin(angle);\n    for (let offset = 0; offset < n; offset += len) {\n      let wr = 1, wi = 0;\n      for (let j = 0; j < len / 2; j++) {\n        const a = offset + j, b = a + len / 2;\n        const tr = re[b] * wr - im[b] * wi, ti = re[b] * wi + im[b] * wr;\n        re[b] = re[a] - tr; im[b] = im[a] - ti;\n        re[a] += tr; im[a] += ti;\n        const next = wr * wr0 - wi * wi0;\n        wi = wr * wi0 + wi * wr0; wr = next;\n      }\n    }\n  }\n  const out = new Float32Array(n / 2 + 1);\n  for (let k = 0; k < out.length; k++) out[k] = Math.hypot(re[k], im[k]) / n;\n  return out;\n}\n\nfunction percentile(values, q = .95) {\n  if (!values.length) return 0;\n  const sorted = Array.from(values).sort((a, b) => a - b);\n  return sorted[Math.min(sorted.length - 1, Math.floor(q * (sorted.length - 1)))];\n}\n\n/** Centered Hann STFT. Bands store windowed spectral power, not calibrated SPL. */\nfunction analyzeAudio(samples, sampleRate, progress = () => {}) {\n  if (!samples.length || !Number.isFinite(sampleRate) || sampleRate < 1000) throw new Error('Invalid audio');\n  const fftSize = 2048, hop = Math.max(128, Math.round(sampleRate * .02322));\n  const frames = Math.ceil(samples.length / hop) + 1, binCount = 64;\n  const rms = new Float32Array(frames), low = new Float32Array(frames);\n  const mid = new Float32Array(frames), high = new Float32Array(frames), onset = new Float32Array(frames);\n  const spectrum = new Float32Array(frames * binCount), window = new Float32Array(fftSize);\n  const buffer = new Float32Array(fftSize), waveform = new Float32Array(240);\n  const previous = new Float32Array(fftSize / 2 + 1);\n  const topFrequency = Math.min(12000, sampleRate / 2);\n  for (let i = 0; i < fftSize; i++) window[i] = .5 - .5 * Math.cos(2 * Math.PI * i / (fftSize - 1));\n  for (let b = 0; b < waveform.length; b++) {\n    const start = Math.floor(b * samples.length / waveform.length);\n    const end = Math.max(start + 1, Math.floor((b + 1) * samples.length / waveform.length));\n    let sum = 0;\n    for (let i = start; i < Math.min(end, samples.length); i++) sum += samples[i] ** 2;\n    waveform[b] = Math.sqrt(sum / Math.max(1, Math.min(end, samples.length) - start));\n  }\n  for (let f = 0; f < frames; f++) {\n    const start = f * hop - fftSize / 2;\n    let sum = 0;\n    for (let i = 0; i < fftSize; i++) {\n      const x = samples[start + i] ?? 0;\n      sum += x * x; buffer[i] = x * window[i];\n    }\n    rms[f] = Math.sqrt(sum / fftSize);\n    const mags = fftMagnitude(buffer);\n    let flux = 0;\n    for (let k = 1; k < mags.length; k++) {\n      const hz = k * sampleRate / fftSize, p = mags[k] ** 2;\n      if (hz >= 40 && hz < 250) low[f] += p;\n      else if (hz >= 250 && hz < 2000) mid[f] += p;\n      else if (hz >= 2000 && hz <= Math.min(10000, sampleRate / 2)) high[f] += p;\n      flux += Math.max(0, mags[k] - previous[k]); previous[k] = mags[k];\n    }\n    onset[f] = f ? flux : 0;\n    for (let b = 0; b < binCount; b++) {\n      const a = 40 * (topFrequency / 40) ** (b / binCount);\n      const z = 40 * (topFrequency / 40) ** ((b + 1) / binCount);\n      const ka = Math.max(1, Math.floor(a * fftSize / sampleRate));\n      const kz = Math.min(mags.length - 1, Math.max(ka, Math.ceil(z * fftSize / sampleRate)));\n      let power = 0;\n      for (let k = ka; k <= kz; k++) power += mags[k] ** 2;\n      spectrum[f * binCount + b] = Math.sqrt(power / Math.max(1, kz - ka + 1));\n    }\n    if (f % 80 === 0) progress(f / frames);\n  }\n  const rawRms = rms.slice();\n  const smoothFrames = Math.max(1, Math.round(.06 / (hop / sampleRate)));\n  for (const array of [low, mid, high]) for (let i = 0; i < array.length; i++) array[i] = Math.sqrt(array[i]);\n  const bandScale = Math.max(percentile(low), percentile(mid), percentile(high)) || 1;\n  for (const array of [rms, low, mid, high, onset]) {\n    const isBand = array === low || array === mid || array === high;\n    const scale = isBand ? bandScale : percentile(array) || 1;\n    let value = 0;\n    for (let i = 0; i < array.length; i++) {\n      const target = clamp(array[i] / scale);\n      value += (target - value) * (array === onset ? .65 : 1 / smoothFrames);\n      array[i] = value;\n    }\n  }\n  const spectrumScale = percentile(spectrum, .99) || 1;\n  for (let i = 0; i < spectrum.length; i++) spectrum[i] = clamp(Math.sqrt(spectrum[i] / spectrumScale));\n  const waveScale = Math.max(...waveform) || 1;\n  for (let i = 0; i < waveform.length; i++) waveform[i] /= waveScale;\n  progress(1);\n  return { frames, hop, sampleRate, fftSize, binCount, rms, rawRms, low, mid, high, onset, spectrum, waveform };\n}\n\nfunction featureAt(data, time) {\n  const x = clamp(time * data.sampleRate / data.hop, 0, data.frames - 1);\n  const a = Math.floor(x), b = Math.min(a + 1, data.frames - 1), u = x - a;\n  const result = {};\n  for (const name of ['rms', 'rawRms', 'low', 'mid', 'high', 'onset']) result[name] = data[name][a] * (1 - u) + data[name][b] * u;\n  result.spectrum = new Float32Array(data.binCount);\n  for (let k = 0; k < data.binCount; k++) result.spectrum[k] = data.spectrum[a * data.binCount + k] * (1 - u) + data.spectrum[b * data.binCount + k] * u;\n  return result;\n}\n\nfunction seededRandom(seed) {\n  let state = seed >>> 0;\n  return () => { state += 0x6D2B79F5; let t = state; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; };\n}\n\n/** Original procedural demo composition: 16 bars, 100 BPM, A minor. */\nfunction synthesizeDemo(sampleRate = 22050) {\n  const beat = .6, duration = beat * 64, samples = new Float32Array(Math.round(sampleRate * duration));\n  const rng = seededRandom(7031), chords = [[57,60,64],[53,57,60],[60,64,67],[55,59,62]];\n  const hz = midi => 440 * 2 ** ((midi - 69) / 12);\n  for (let i = 0; i < samples.length; i++) {\n    const t = i / sampleRate, bar = Math.floor(t / (4 * beat));\n    const chord = chords[bar % 4], bt = t % beat, half = t % (beat / 2);\n    let x = 0;\n    for (let n = 0; n < 3; n++) {\n      const f = hz(chord[n]);\n      const envelope = Math.min(1, (t % (beat * 4)) / .25) * Math.min(1, (beat * 4 - t % (beat * 4)) / .4);\n      x += .045 * envelope * (Math.sin(2 * Math.PI * f * t) + .3 * Math.sin(2 * Math.PI * f * 1.003 * t));\n    }\n    const step = Math.floor(t / (beat / 2)), arp = hz(chord[step % 3] + 12);\n    x += .13 * Math.exp(-half * 10) * (Math.sin(2 * Math.PI * arp * t) + .2 * Math.sin(4 * Math.PI * arp * t));\n    x += .12 * Math.exp(-bt * 5) * Math.sin(2 * Math.PI * hz(chord[0] - 24) * t);\n    x += .28 * Math.exp(-bt * 25) * Math.sin(2 * Math.PI * (45 * bt + 2.5 * (1 - Math.exp(-bt * 28))));\n    const noise = rng() * 2 - 1;\n    x += .035 * Math.exp(-half * 75) * noise;\n    if (Math.floor(t / beat) % 2) x += .06 * Math.exp(-bt * 30) * noise;\n    const fade = Math.min(1, t / .4, (duration - t) / 1.8);\n    samples[i] = Math.tanh(x * 1.25) * fade;\n  }\n  return { samples, sampleRate, duration };\n}\n\nfunction encodeWav(samples, sampleRate) {\n  const buffer = new ArrayBuffer(44 + samples.length * 2), view = new DataView(buffer);\n  const str = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };\n  str(0,'RIFF'); view.setUint32(4,36 + samples.length * 2,true); str(8,'WAVE'); str(12,'fmt ');\n  view.setUint32(16,16,true); view.setUint16(20,1,true); view.setUint16(22,1,true); view.setUint32(24,sampleRate,true);\n  view.setUint32(28,sampleRate * 2,true); view.setUint16(32,2,true); view.setUint16(34,16,true); str(36,'data');\n  view.setUint32(40,samples.length * 2,true);\n  for (let i = 0; i < samples.length; i++) { const x = clamp(samples[i],-1,1); view.setInt16(44 + i * 2, x < 0 ? x * 32768 : x * 32767, true); }\n  return buffer;\n}\n\n\nself.onmessage = ({data}) => {\n  try {\n    const source = data.demo ? synthesizeDemo() : {samples: data.samples, sampleRate: data.sampleRate};\n    const analysis = analyzeAudio(source.samples, source.sampleRate, value => self.postMessage({type:'progress',value}));\n    const buffers = Object.values(analysis).filter(x => x instanceof Float32Array).map(x => x.buffer);\n    const result = {type:'complete',analysis};\n    if (data.demo) { result.samples = source.samples; result.sampleRate = source.sampleRate; buffers.push(source.samples.buffer); }\n    self.postMessage(result,buffers);\n  } catch (error) { self.postMessage({type:'error',message:error.message}); }\n};\n"],{type:"text/javascript"}));
+
+
+
+
+const $=id=>document.getElementById(id);
+const state={settings:{...DEFAULT_SETTINGS},analysis:null,track:null,loading:true,revision:0,worker:null,recording:false};
+const canvas=$('visual-canvas'),ctx=canvas.getContext('2d'),wave=$('waveform'),waveCtx=wave.getContext('2d');
+const silent={rms:0,rawRms:0,low:0,mid:0,high:0,onset:0,spectrum:new Float32Array(64)};
+const preview={rms:.45,rawRms:.1,low:.5,mid:.4,high:.3,onset:.05,spectrum:Float32Array.from({length:64},(_,i)=>.3+.2*Math.sin(i*.7))};
+const engine=new AudioEngine(()=>{if(state.recording)stopRecording();syncPlayButtons();});
+let toastTimer,recorder,recordTimer,recordVideoStream;
+
+function toast(text) {$('toast').textContent=text;$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),4500);}
+const formatTime=t=>`${String(Math.floor(Math.max(0,t)/60)).padStart(2,'0')}:${String(Math.floor(Math.max(0,t)%60)).padStart(2,'0')}`;
+function download(blob,name) {const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);}
+function syncPlayButtons() {
+  $('play-button').classList.toggle('is-playing',engine.playing);
+  $('play-button').setAttribute('aria-label',engine.playing?'暂停':'播放');
+  $('play-button').querySelector('use').setAttribute('href',engine.playing?'#i-pause':'#i-play');
+  $('stage-play').hidden=engine.playing||state.loading;
+}
+function setLoading(loading,title='正在分析这段声音') {
+  state.loading=loading;$('loading').hidden=!loading;$('loading-title').textContent=title;
+  for(const id of ['play-button','stage-play','seek','snapshot-button','record-button','save-project','restart-button'])$(id).disabled=loading||!state.analysis;
+  syncPlayButtons();
+}
+function resizeCanvas() {
+  const sizes={'16:9':[1280,720],'1:1':[1080,1080],'9:16':[720,1280]};
+  [canvas.width,canvas.height]=sizes[state.settings.ratio];
+  const stage=$('stage'),rect=stage.getBoundingClientRect(),ratio=canvas.width/canvas.height;
+  const width=Math.min(rect.width,rect.height*ratio);
+  canvas.style.width=`${width}px`;canvas.style.height=`${width/ratio}px`;
+}
+
+function syncSettings() {
+  const s=state.settings;
+  document.querySelectorAll('[data-theme]').forEach(button=>{const yes=button.dataset.theme===s.theme;button.classList.toggle('selected',yes);button.setAttribute('aria-pressed',String(yes));});
+  document.querySelectorAll('[data-ratio]').forEach(button=>{const yes=button.dataset.ratio===s.ratio;button.classList.toggle('active',yes);button.setAttribute('aria-pressed',String(yes));});
+  document.querySelectorAll('[data-palette]').forEach(button=>{const yes=button.dataset.palette===s.palette;button.classList.toggle('selected',yes);button.setAttribute('aria-pressed',String(yes));});
+  for(const name of ['sensitivity','motion','density','glow']) {
+    $(name).value=s[name];$(`${name}-value`).textContent=name==='density'?String(s[name]):name==='glow'?`${Math.round(s[name]*100)}%`:`${s[name].toFixed(2)}×`;
+  }
+  $('palette-name').textContent=PALETTES[s.palette].name;$('theme-name').textContent=THEMES[s.theme].name;
+  $('visual-caption').textContent=THEMES[s.theme].caption;$('artwork-title').value=s.title;
+  resizeCanvas();renderThumbnails();
+}
+function renderThumbnails() {
+  for(const button of document.querySelectorAll('[data-theme]')) {
+    const thumbnail=button.querySelector('canvas');
+    renderVisual(thumbnail.getContext('2d'),thumbnail.width,thumbnail.height,4,preview,{...state.settings,theme:button.dataset.theme,density:75},{title:''});
+  }
+}
+
+function analyze(samples,sampleRate,demo,revision) {
+  return new Promise((resolve,reject)=>{
+    const worker=new Worker(analysisWorkerUrl);state.worker=worker;
+    worker.onmessage=({data})=>{
+      if(revision!==state.revision){worker.terminate();return;}
+      if(data.type==='progress')$('loading-detail').textContent=`分析音色与能量… ${Math.round(data.value*100)}%`;
+      else {worker.terminate();state.worker=null;data.type==='error'?reject(new Error(data.message)):resolve(data);}
+    };
+    worker.onerror=()=>{worker.terminate();state.worker=null;reject(new Error('音频分析失败，请刷新页面后重试'));};
+    worker.postMessage(demo?{demo:true}:{samples,sampleRate},demo?[]:[samples.buffer]);
+  });
+}
+
+async function loadAudio(file=null) {
+  if(state.recording){toast('请先停止录制，再更换音乐');return;}
+  if(file&&file.size>32*1024*1024){toast('请选择小于 32 MB 的音频文件');return;}
+  const revision=++state.revision;state.worker?.terminate();engine.pause();
+  setLoading(true,file?'正在打开你的音乐':'正在准备原创示例');$('loading-detail').textContent=file?'解码音频文件…':'生成 Amber & Air…';
+  try {
+    let channels,sampleRate,result;
+    if(file) {
+      const DecodeContext=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+      if(!DecodeContext)throw new Error('当前浏览器无法解码音频，请换用新版浏览器');
+      const decoder=new DecodeContext(2,1,44100);
+      let decoded;
+      try{decoded=await decoder.decodeAudioData(await file.arrayBuffer());}catch{throw new Error('无法读取这个音频，请尝试 WAV 或 MP3 格式');}
+      if(revision!==state.revision)return;
+      if(decoded.duration>180)throw new Error('第一版支持最长 3 分钟的音乐，请先截取需要的片段');
+      if(decoded.duration<.1)throw new Error('音频太短，请选择至少 0.1 秒的声音');
+      sampleRate=decoded.sampleRate;channels=Array.from({length:decoded.numberOfChannels},(_,i)=>decoded.getChannelData(i).slice());
+      const mono=new Float32Array(decoded.length);
+      for(const channel of channels)for(let i=0;i<mono.length;i++)mono[i]+=channel[i]/channels.length;
+      result=await analyze(mono,sampleRate,false,revision);
+    } else {
+      result=await analyze(null,0,true,revision);channels=[result.samples];sampleRate=result.sampleRate;
+    }
+    if(revision!==state.revision)return;
+    engine.setTrack(channels,sampleRate);state.analysis=result.analysis;
+    state.track={name:file?file.name:'Amber & Air',demo:!file,duration:engine.duration,sampleRate};
+    $('track-title').textContent=state.track.name;
+    $('track-meta').textContent=`${file?'本地音频':'原创合成示例'} · ${(sampleRate/1000).toFixed(2)} kHz · ${formatTime(engine.duration)}`;
+    $('total-time').textContent=formatTime(engine.duration);$('seek').max=engine.duration;$('seek').value=0;
+    $('demo-button').classList.toggle('active',!file);$('artwork-title').value=state.settings.title=file?file.name.replace(/\.[^.]+$/,'').slice(0,42):'AMBER & AIR';
+    setLoading(false);
+    if(file)toast('音乐已载入。选择视觉主题，然后点击播放');
+  } catch(error) {
+    if(revision!==state.revision)return;
+    setLoading(false);toast(error.message);
+    if(!state.analysis){$('loading').hidden=false;$('loading-title').textContent='暂时无法载入';$('loading-detail').textContent='请点击左侧示例重试，或导入一段音频';}
+  }
+}
+
+async function togglePlay() {
+  if(state.loading||!state.analysis)return;
+  if(state.recording){stopRecording();return;}
+  try{if(engine.playing)engine.pause();else await engine.play();syncPlayButtons();}catch(error){toast(error.message);}
+}
+function drawWaveform(time) {
+  const w=wave.width,h=wave.height,values=state.analysis?.waveform;
+  waveCtx.clearRect(0,0,w,h);if(!values)return;
+  const position=time/(engine.duration||1),step=w/values.length;
+  for(let i=0;i<values.length;i++){
+    const height=Math.max(3,values[i]*(h-9));waveCtx.fillStyle=i/values.length<position?'#7a8f62':'#d3dac5';
+    waveCtx.fillRect(i*step,h/2-height/2,Math.max(1,step-1.6),height);
+  }
+  waveCtx.fillStyle='#7a8f62';waveCtx.fillRect(position*w,0,2,h);
+}
+let previousUiTime=-1;
+function animate() {
+  const time=engine.time(),features=state.analysis?featureAt(state.analysis,time):silent;
+  renderVisual(ctx,canvas.width,canvas.height,time,features,state.settings,{title:state.settings.title});
+  if(Math.abs(time-previousUiTime)>.03||!engine.playing) {
+    $('current-time').textContent=formatTime(time);$('seek').value=time;
+    $('seek').setAttribute('aria-valuetext',`${formatTime(time)}，共 ${formatTime(engine.duration||0)}`);
+    drawWaveform(time);
+    for(const band of ['low','mid','high'])$(`meter-${band}`).style.width=`${features[band]*100}%`;
+    $('rms-value').textContent=features.rawRms>1e-8?`${(20*Math.log10(features.rawRms)).toFixed(1)} dBFS`:'−∞ dBFS';
+    previousUiTime=time;
+  }
+  requestAnimationFrame(animate);
+}
+
+function getRecordingType(){if(!window.MediaRecorder||!canvas.captureStream)return '';return ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4'].find(type=>MediaRecorder.isTypeSupported(type))||'';}
+async function startRecording() {
+  if(state.recording){stopRecording();return;}
+  if(state.loading||!state.analysis)return;
+  const mime=getRecordingType();if(!mime){toast('此浏览器不支持有声画布录制，仍可导出 PNG；建议使用新版 Chrome 或 Edge');return;}
+  try {
+    await engine.ensureContext();
+    if(engine.time()>=engine.duration-.1)await engine.seek(0);
+    recordVideoStream=canvas.captureStream(30);
+    const videoStream=recordVideoStream;
+    const stream=new MediaStream([...videoStream.getVideoTracks(),...engine.recordDestination.stream.getAudioTracks()]);
+    const chunks=[],extension=mime.includes('mp4')?'mp4':'webm';
+    recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:5000000});
+    recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+    recorder.onstop=()=>{
+      videoStream.getTracks().forEach(track=>track.stop());if(recordVideoStream===videoStream)recordVideoStream=null;
+      if(chunks.length){download(new Blob(chunks,{type:mime}),`resonance-${Date.now()}.${extension}`);toast('短片已导出，请播放文件检查音画效果');}
+      else toast('录制没有产生数据，请尝试播放一段更长的片段');
+    };
+    recorder.onerror=()=>{stopRecording();toast('录制失败，请尝试较低负载下重新录制');};
+    state.recording=true;recorder.start(250);setRecordingUi(true);
+    if(!engine.playing)await engine.play();syncPlayButtons();
+    recordTimer=setTimeout(stopRecording,30000);toast('正在实时录制，最长 30 秒。点击「停止录制」结束');
+  }catch(error){stopRecording();toast(`无法开始录制：${error.message}`);}
+}
+function setRecordingUi(yes) {
+  $('record-button').classList.toggle('recording',yes);$('recording-badge').hidden=!yes;
+  $('record-button').innerHTML=yes?'<svg><use href="#i-film"/></svg>停止录制<span>■</span>':'<svg><use href="#i-film"/></svg>录制短片<span>最长 30s</span>';
+  for(const selector of ['[data-ratio]','#audio-file','#upload-button','#demo-button','#import-project','#reset-button','#seek','#restart-button','#loop-button'])document.querySelectorAll(selector).forEach(element=>element.disabled=yes);
+}
+function stopRecording() {
+  clearTimeout(recordTimer);state.recording=false;setRecordingUi(false);
+  if(recorder&&recorder.state!=='inactive')recorder.stop();
+}
+
+$('upload-button').onclick=()=>$('audio-file').click();
+$('audio-file').onchange=e=>{const file=e.target.files[0];if(file)loadAudio(file);e.target.value='';};
+$('demo-button').onclick=()=>loadAudio();
+for(const event of ['dragenter','dragover'])document.addEventListener(event,e=>{if(e.dataTransfer?.types.includes('Files')){e.preventDefault();document.body.classList.add('drag-over');}});
+document.addEventListener('dragleave',e=>{if(!e.relatedTarget)document.body.classList.remove('drag-over');});
+document.addEventListener('drop',e=>{e.preventDefault();document.body.classList.remove('drag-over');const file=e.dataTransfer.files[0];if(file)loadAudio(file);});
+$('play-button').onclick=togglePlay;$('stage-play').onclick=togglePlay;
+$('restart-button').onclick=async()=>{try{await engine.seek(0);syncPlayButtons();}catch(error){toast(error.message);}};
+$('loop-button').onclick=()=>{engine.setLoop(!engine.loop);$('loop-button').setAttribute('aria-pressed',String(engine.loop));toast(engine.loop?'循环播放已开启':'循环播放已关闭');};
+$('volume').oninput=e=>engine.setVolume(Number(e.target.value));
+$('seek').oninput=async e=>{if(!state.recording)try{await engine.seek(Number(e.target.value));syncPlayButtons();}catch(error){toast(error.message);}};
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&!['INPUT','TEXTAREA','SELECT','BUTTON'].includes(document.activeElement.tagName)&&!$('help-dialog').open){e.preventDefault();togglePlay();}});
+document.querySelectorAll('[data-theme]').forEach(button=>button.onclick=()=>{state.settings.theme=button.dataset.theme;syncSettings();});
+document.querySelectorAll('[data-palette]').forEach(button=>button.onclick=()=>{state.settings.palette=button.dataset.palette;syncSettings();});
+document.querySelectorAll('[data-ratio]').forEach(button=>button.onclick=()=>{state.settings.ratio=button.dataset.ratio;syncSettings();});
+for(const name of ['sensitivity','motion','density','glow'])$(name).oninput=e=>{state.settings[name]=Number(e.target.value);$(`${name}-value`).textContent=name==='density'?e.target.value:name==='glow'?`${Math.round(state.settings[name]*100)}%`:`${state.settings[name].toFixed(2)}×`;};
+$('artwork-title').oninput=e=>state.settings.title=e.target.value;
+$('reset-button').onclick=()=>{const title=state.settings.title;state.settings={...DEFAULT_SETTINGS,title};syncSettings();toast('视觉参数已恢复默认');};
+$('fullscreen-button').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('stage').requestFullscreen();}catch{toast('当前浏览器无法进入全屏，可放大浏览器窗口预览');}};
+window.addEventListener('resize',resizeCanvas);document.addEventListener('fullscreenchange',()=>setTimeout(resizeCanvas,50));new ResizeObserver(resizeCanvas).observe($('stage'));
+$('snapshot-button').onclick=()=>canvas.toBlob(blob=>{if(blob){download(blob,`resonance-${state.settings.theme}-${Date.now()}.png`);toast(`画面已导出 · ${canvas.width} × ${canvas.height}`);}},'image/png');
+$('record-button').onclick=startRecording;
+$('save-project').onclick=()=>{const project={application:'resonance-studio',version:1,settings:{...state.settings},audio:state.track};download(new Blob([JSON.stringify(project,null,2)],{type:'application/json'}),'resonance-project.json');toast('方案已保存。音频文件不包含在 JSON 中');};
+$('import-project').onclick=()=>$('project-file').click();
+$('project-file').onchange=async e=>{
+  const file=e.target.files[0];e.target.value='';if(!file)return;
+  if(file.size>100000){toast('方案文件过大，请选择导出的 JSON 文件');return;}
+  try{
+    const result=validateProject(JSON.parse(await file.text()));state.settings=result.settings;syncSettings();
+    if(result.audio&&(result.audio.name!==state.track?.name||Math.abs(result.audio.duration-(state.track?.duration||0))>.1))toast(`方案已打开，请重新导入对应音频：${String(result.audio.name||'原音频').slice(0,80)}`);
+    else toast('创作方案已恢复');
+  }catch(error){toast(error instanceof SyntaxError?'无法解析这个 JSON 文件':error.message);}
+};
+$('download-demo').onclick=()=>{const {samples,sampleRate}=synthesizeDemo();download(new Blob([encodeWav(samples,sampleRate)],{type:'audio/wav'}),'Amber-and-Air-original-demo.wav');toast('原创示例音频已下载，可用于测试和项目演示');};
+$('help-button').onclick=()=>$('help-dialog').showModal();$('close-help').onclick=()=>$('help-dialog').close();$('help-start').onclick=()=>$('help-dialog').close();
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.recording){stopRecording();toast('页面进入后台，已结束录制以避免缺帧');}});
+if(!getRecordingType())$('record-help').textContent='此浏览器可能不支持录制；PNG 可用';
+syncSettings();setLoading(true);requestAnimationFrame(animate);loadAudio();
+
+})();
+</script>
+</body></html>
